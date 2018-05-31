@@ -10,7 +10,7 @@ public class Lexer extends State {
     private static int state = ST;
 
     private static List<String> faultList = new ArrayList<>(); // 错误表
-    private static StringBuilder result = new StringBuilder();       // 扫描之后的结果
+    private static StringBuilder result = new StringBuilder(); // 扫描之后的结果
     private static List<String> tokenList = new ArrayList<>(); // 字符表
     private static List<String> symbolList = new ArrayList<>();// 标识符表
 
