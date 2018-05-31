@@ -23,43 +23,43 @@ public class State {
     public static final int DONE = 10;
 
     //当前字符属性
-    public static final int PLUS = 11;
-    public static final int MINUS = 12;
-    public static final int EQUAL = 13;
-    public static final int LBRACE = 14;
-    public static final int RBRACE = 15;
-    public static final int COLON = 16;
-    public static final int SEMI = 17;
-    public static final int SPACE = 18;
-    public static final int TABLE = 19;
-    public static final int ENTER = 20;
+    public static final int PLUS = 1;
+    public static final int MINUS = 2;
+    public static final int EQUAL = 3;
+    public static final int LBRACE = 4;
+    public static final int RBRACE = 5;
+    public static final int COLON = 6;
+    public static final int SEMI = 7;
+    public static final int SPACE = 8;
+    public static final int TABLE = 9;
+    public static final int ENTER = 10;
 
-    public static final int DOUBLECOLON = 21;
-    public static final int WORD = 22;
-    public static final int NUM = 23;
-    public static final int PLUSEQUALBIG = 24;
-    public static final int MINUSBIG = 25;
-    public static final int EQUALBIG = 26;
+    public static final int DOUBLECOLON = 11;
+    public static final int WORD = 12;
+    public static final int NUM = 13;
+    public static final int PLUSEQUALBIG = 14;
+    public static final int MINUSBIG = 15;
+    public static final int EQUALBIG = 16;
 
     //关键字
-    public static final int THREAD = 27;
-    public static final int FEATURES = 28;
-    public static final int FLOWS = 29;
-    public static final int PROPERTIES = 30;
-    public static final int END = 31;
-    public static final int NONE = 32;
-    public static final int IN = 33;
-    public static final int OUT = 34;
-    public static final int DATA = 35;
-    public static final int PORT = 36;
-    public static final int EVENT = 37;
-    public static final int PARAMETER = 38;
-    public static final int FLOW = 39;
-    public static final int SOURCE = 40;
-    public static final int SINK = 41;
-    public static final int PATH = 42;
-    public static final int CONSTANT = 43;
-    public static final int ACCESS = 44;
+    public static final int THREAD = 17;
+    public static final int FEATURES = 18;
+    public static final int FLOWS = 19;
+    public static final int PROPERTIES = 20;
+    public static final int END = 21;
+    public static final int NONE = 22;
+    public static final int IN = 23;
+    public static final int OUT = 24;
+    public static final int DATA = 25;
+    public static final int PORT = 26;
+    public static final int EVENT = 27;
+    public static final int PARAMETER = 28;
+    public static final int FLOW = 29;
+    public static final int SOURCE = 30;
+    public static final int SINK = 31;
+    public static final int PATH = 32;
+    public static final int CONSTANT = 33;
+    public static final int ACCESS = 34;
 
     public static final int ERROR = -1;
 }
