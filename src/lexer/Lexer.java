@@ -6,14 +6,13 @@ import java.util.List;
 import java.util.Objects;
 
 public class Lexer extends State {
-    public static int currentToken = 0;
-    public static boolean save = false;
-    public static int state = ST;
+    private static int currentToken = 0;
+    private static int state = ST;
 
-    public static List<String> faultList = new ArrayList<String>(); // 错误表
-    public static StringBuilder result = new StringBuilder();       // 扫描之后的结果
-    public static List<String> tokenList = new ArrayList<String>(); // 字符表
-    public static List<String> symbolList = new ArrayList<String>();// 标识符表
+    private static List<String> faultList = new ArrayList<>(); // 错误表
+    private static StringBuilder result = new StringBuilder();       // 扫描之后的结果
+    private static List<String> tokenList = new ArrayList<>(); // 字符表
+    private static List<String> symbolList = new ArrayList<>();// 标识符表
 
     /**
      * 扫描一行
