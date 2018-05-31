@@ -2,7 +2,6 @@ package lexer;
 
 import java.io.*;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 
@@ -23,7 +22,7 @@ public class Lexer extends State {
      * @param lineNum 扫描行数
      */
     private static void scan(String source, int lineNum) {
-        int endCol = 0;
+        int endCol;
         int beginCol = 0;
         int length = source.length();       // 行长度
         int pointer = 0;                    // 当前扫描列号
@@ -325,28 +324,28 @@ public class Lexer extends State {
      * @return 返回读取的字符串
      */
     private static String readFile(String filename) {
-        String source = "";
+        StringBuilder source = new StringBuilder();
         try {
             File file = new File(filename);
             if (file.isFile() && file.exists()) {
                 InputStreamReader is = new InputStreamReader(new FileInputStream(file));
                 BufferedReader br = new BufferedReader(is);
-                String line = null;
+                String line;
                 while ((line = br.readLine()) != null) {
-                    source += line + "\n";
+                    source.append(line).append("\n");
                 }
             }
         } catch (IOException e) {
             e.printStackTrace();
         }
-        return source;
+        return source.toString();
     }
 
     /**
      * 输出结果
      *
      * @param outputFilename 结果输出文件
-     * @throws IOException
+     * @throws IOException 文件读写异常
      */
     private static void output(String outputFilename) throws IOException {
         // 输出结果
@@ -363,7 +362,7 @@ public class Lexer extends State {
      * 输出错误信息
      *
      * @param errorFilename 错误信息输出文件
-     * @throws IOException
+     * @throws IOException 文件读写异常
      */
     private static void errorOutput(String errorFilename) throws IOException {
         File errorFile = new File(errorFilename);
