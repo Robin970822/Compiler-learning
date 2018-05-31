@@ -4,6 +4,7 @@ import java.io.*;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 
 public class Lexer extends State {
     public static int currentToken = 0;
@@ -193,8 +194,10 @@ public class Lexer extends State {
             } // End switch state
 
             if (state == DONE) {
+                // 实数或者标识符
                 if (currentToken == NUM || currentToken == WORD) {
                     String tmp = source.substring(beginCol, endCol);
+                    // 判断是否为关键字
                     tokenList.add("<" + tmp + "," + (getKeyword(tmp) == -1 ? currentToken : getKeyword(tmp)) + ">");
                     if (getKeyword(tmp) == -1 && currentToken == WORD) {
                         if (!symbolList.contains(tmp)) {
@@ -203,26 +206,25 @@ public class Lexer extends State {
                     }
                     result.append(" ").append(tmp);
                     currentToken = -1;
-                } else if (currentToken == COLON) {
+                } else if (currentToken == COLON) { // 是否为 ":"
                     tokenList.add("<" + ":" + "," + COLON + ">");
                     result.append(":");
                     currentToken = -1;
-                } else if (currentToken == DOUBLECOLON) {
+                } else if (currentToken == DOUBLECOLON) { // 是否为 "::"
                     tokenList.add("<" + "::" + "," + DOUBLECOLON + ">");
                     result.append("::");
                     currentToken = -1;
                     pointer++;
                 } else {
-                    if (source.substring(beginCol, endCol) != "\n") {
+                    if (!Objects.equals(source.substring(beginCol, endCol), "\n")) { // 其他情况
                         // String toAppend = source.substring(beginCol, endCol);
                         tokenList.add("<" + source.substring(beginCol, endCol + 1) + "," + currentToken + ">");
                         result.append(" ").append(source.substring(beginCol, endCol + 1));
                     }
-                    pointer++;
+                    pointer++; //指针前移
                     currentToken = -1;
                 }
-                // System.out.println(result.toString());
-                pointer--;
+                pointer--; // 指针后移
                 state = ST;
             } // state == DONE end
         }
@@ -317,16 +319,6 @@ public class Lexer extends State {
     }
 
     /**
-     * 判断输入字符是否为+ -
-     *
-     * @param c 输入字符
-     * @return 是否为+ -
-     */
-    private static boolean isSign(char c) {
-        return c == '+' || c == '-';
-    }
-
-    /**
      * 读取文件内容返回
      *
      * @param filename 文件读经
@@ -348,6 +340,43 @@ public class Lexer extends State {
             e.printStackTrace();
         }
         return source;
+    }
+
+    /**
+     * 输出结果
+     *
+     * @param outputFilename 结果输出文件
+     * @throws IOException
+     */
+    private static void output(String outputFilename) throws IOException {
+        // 输出结果
+        File outputFile = new File(outputFilename);
+        if (!outputFile.exists())
+            outputFile.createNewFile();
+        FileOutputStream out = new FileOutputStream(outputFile, false);
+        for (String s : tokenList)
+            out.write((s + '\n').getBytes("utf-8"));
+        out.close();
+    }
+
+    /**
+     * 输出错误信息
+     *
+     * @param errorFilename 错误信息输出文件
+     * @throws IOException
+     */
+    private static void errorOutput(String errorFilename) throws IOException {
+        File errorFile = new File(errorFilename);
+        if (!errorFile.exists())
+            errorFile.createNewFile();
+        FileOutputStream error = new FileOutputStream(errorFile, false);
+        for (String s : faultList) {
+            String[] errorInfo = s.split("%");
+            error.write((errorInfo[0] + "\n").getBytes("utf-8"));
+            error.write(("\t\tError:" + errorInfo[2] + "\n").getBytes("utf-8"));
+            error.write('\n');
+        }
+        error.close();
     }
 
     public static void main(String[] args) throws IOException {
@@ -387,27 +416,11 @@ public class Lexer extends State {
         }
 
         // 输出结果
-        File outputFile = new File(outputFilename);
-        if (!outputFile.exists())
-            outputFile.createNewFile();
-        FileOutputStream out = new FileOutputStream(outputFile, false);
-        for (String s : tokenList)
-            out.write((s + '\n').getBytes("utf-8"));
-        out.close();
+        output(outputFilename);
 
         // 输出错误
         if (faultList.size() != 0) {
-            File errorFile = new File(errorFilename);
-            if (!errorFile.exists())
-                errorFile.createNewFile();
-            FileOutputStream error = new FileOutputStream(errorFile, false);
-            for (String s : faultList) {
-                String[] errorInfo = s.split("%");
-                error.write((Arrays.toString(errorInfo) + "\n").getBytes("utf-8"));
-                error.write(("\t\tError:" + errorInfo[2] + "\n").getBytes("utf-8"));
-                error.write('\n');
-            }
-            error.close();
+            errorOutput(errorFilename);
         }
     }
 
