@@ -3,7 +3,6 @@ package parser;
 import util.Token;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -25,14 +24,14 @@ public class Parser {
      *
      * @return 字符类型
      */
-    private static Token nextToken(){
-        if (pointer < sourceList.size()){
+    private static Token nextToken() {
+        if (pointer < sourceList.size()) {
             String s = sourceList.get(pointer++);
             int index = s.indexOf(',');
             Token token = Token.valueOf(s.substring(index + 1, s.length() - 2));
             currentVal = s.substring(1, index);
             return token;
-        }else return null;
+        } else return null;
     }
 
     /**
@@ -41,10 +40,10 @@ public class Parser {
      * @param expected 期望字符类型
      * @return 是否匹配
      */
-    private static boolean match(Token expected){
-        if (currentToken == expected){
+    private static boolean match(Token expected) {
+        if (currentToken == expected) {
             return true;
-        }else {
+        } else {
             System.out.println("Unexpected token: " + currentVal);
             return false;
         }

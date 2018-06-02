@@ -1,7 +1,7 @@
 package util;
 
 /**
- *  状态常量
+ * 状态常量
  */
 public enum State {
     // 开始状态常量

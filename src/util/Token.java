@@ -1,7 +1,7 @@
 package util;
 
 /**
- *  字符类型
+ * 字符类型
  */
 public enum Token {
     // 专用符号

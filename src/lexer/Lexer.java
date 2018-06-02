@@ -18,10 +18,27 @@ public class Lexer {
 
     private static StringBuilder result = new StringBuilder(); // 扫描之后的结果
 
-    private static List<String> sourceList = new ArrayList<>(); // 原文表
     private static List<String> faultList = new ArrayList<>();  // 错误表
     private static List<String> tokenList = new ArrayList<>();  // 字符表
     private static List<String> symbolList = new ArrayList<>(); // 标识符表
+
+    /**
+     * 返回结果
+     *
+     * @return 词法分析结果
+     */
+    public static StringBuilder getResult() {
+        return result;
+    }
+
+    /**
+     * 返回标识符列表
+     *
+     * @return 标识符列表
+     */
+    public static List<String> getSymbolList() {
+        return symbolList;
+    }
 
     /**
      * 扫描一行
@@ -388,7 +405,7 @@ public class Lexer {
                 return;
         }
 
-        sourceList = readFile(sourceFilename);
+        List<String> sourceList = readFile(sourceFilename);
         // 扫描开始行号
         int line = 1;
         // 开始扫描
