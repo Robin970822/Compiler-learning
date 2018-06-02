@@ -15,10 +15,10 @@ public class Lexer{
 
     private static StringBuilder result = new StringBuilder(); // 扫描之后的结果
 
-    private static List<String> sourceList = new ArrayList<>();
-    private static List<String> faultList = new ArrayList<>(); // 错误表
-    private static List<String> tokenList = new ArrayList<>(); // 字符表
-    private static List<String> symbolList = new ArrayList<>();// 标识符表
+    private static List<String> sourceList = new ArrayList<>(); // 原文表
+    private static List<String> faultList = new ArrayList<>();  // 错误表
+    private static List<String> tokenList = new ArrayList<>();  // 字符表
+    private static List<String> symbolList = new ArrayList<>(); // 标识符表
 
     /**
      * 扫描一行
@@ -341,8 +341,6 @@ public class Lexer{
     private static void output(String outputFilename) throws IOException {
         // 输出结果
         File outputFile = new File(outputFilename);
-        if (!outputFile.exists())
-            outputFile.createNewFile();
         FileOutputStream out = new FileOutputStream(outputFile, false);
         for (String s : tokenList)
             out.write((s + '\n').getBytes("utf-8"));
@@ -357,8 +355,6 @@ public class Lexer{
      */
     private static void errorOutput(String errorFilename) throws IOException {
         File errorFile = new File(errorFilename);
-        if (!errorFile.exists())
-            errorFile.createNewFile();
         FileOutputStream error = new FileOutputStream(errorFile, false);
         for (String s : faultList) {
             String[] errorInfo = s.split("%");
