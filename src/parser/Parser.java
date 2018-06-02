@@ -29,11 +29,11 @@ public class Parser {
 
     public static void main(String[] args) throws IOException {
         String tokenOutFilename = "tokenOut.txt";
-        String SyntaxOutFilename = "SyntaxOut.txt";
+        String syntaxOutFilename = "SyntaxOut.txt";
 
         switch (args.length) {
             case 2:
-                SyntaxOutFilename = args[1];
+                syntaxOutFilename = args[1];
             case 1:
                 tokenOutFilename = args[0];
             case 0:
@@ -46,6 +46,6 @@ public class Parser {
         sourceList = readFile(tokenOutFilename);
 
         // 输出结果
-        output(SyntaxOutFilename);
+        output(syntaxOutFilename);
     }
 }
