@@ -7,12 +7,16 @@ import java.util.Objects;
 import common.State;
 import common.Token;
 
+import static common.FileReader.readFile;
+
 public class Lexer{
     private static Token currentToken;
     private static State state = State.ST;
 
-    private static List<String> faultList = new ArrayList<>(); // 错误表
     private static StringBuilder result = new StringBuilder(); // 扫描之后的结果
+
+    private static List<String> sourceList = new ArrayList<>();
+    private static List<String> faultList = new ArrayList<>(); // 错误表
     private static List<String> tokenList = new ArrayList<>(); // 字符表
     private static List<String> symbolList = new ArrayList<>();// 标识符表
 
@@ -329,30 +333,6 @@ public class Lexer{
     }
 
     /**
-     * 读取文件内容返回
-     *
-     * @param filename 文件读经
-     * @return 返回读取的字符串
-     */
-    private static String readFile(String filename) {
-        StringBuilder source = new StringBuilder();
-        try {
-            File file = new File(filename);
-            if (file.isFile() && file.exists()) {
-                InputStreamReader is = new InputStreamReader(new FileInputStream(file));
-                BufferedReader br = new BufferedReader(is);
-                String line;
-                while ((line = br.readLine()) != null) {
-                    source.append(line).append("\n");
-                }
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return source.toString();
-    }
-
-    /**
      * 输出结果
      *
      * @param outputFilename 结果输出文件
@@ -409,22 +389,14 @@ public class Lexer{
                 return;
         }
 
-        String source = readFile(sourceFilename);
-        int length = source.length();
-        // 扫描开始列号
-        int beginColumn = 0;
+        sourceList = readFile(sourceFilename);
         // 扫描开始行号
         int line = 1;
         // 开始扫描
-        for (int i = 0; i < length; i++) {
-            if (source.charAt(i) == '\n') {
-                scan(source.substring(beginColumn, i) + '\n', line);
-                result.append('\n');
-                line++;
-                beginColumn = i + 1;
-            }
+        for (String s: sourceList) {
+            scan(s, line);
+            line++;
         }
-
         // 输出结果
         output(outputFilename);
 
