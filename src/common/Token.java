@@ -3,7 +3,7 @@ package common;
 /**
  *  字符类型
  */
-public enum TokenType{
+public enum Token {
     // 专用符号
     PLUS,           //+
     MINUS,          //-

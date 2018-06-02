@@ -1,0 +1,18 @@
+package common;
+
+public enum Statement {
+    THREAD_SPEC,
+    FEATURE_SPEC,
+    PORT_SPEC,
+    PORT_TYPE,
+    PARAMETE_SPEC,
+    IO_TYPE,
+    FLOW_SPEC,
+    FLOW_SOURCE_SPEC,
+    FLOW_SINK_SPEC,
+    FLOW_PATH_SPEC,
+    ASSOCIATION,
+    SPLITTER,
+    REFERENCE,
+    PACKAGE_NAME
+}
