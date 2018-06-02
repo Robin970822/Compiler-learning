@@ -367,7 +367,7 @@ public class Lexer{
 
     public static void main(String[] args) throws IOException {
 
-        String sourceFilename = "test2.txt";
+        String sourceFilename = "test.txt";
         String outputFilename = "tokenOut.txt";
         String errorFilename = "errorOut.txt";
 

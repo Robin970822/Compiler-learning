@@ -28,14 +28,14 @@ public class Parser {
     }
 
     public static void main(String[] args) throws IOException {
-        String sourceFilename = "tokenOut.txt";
-        String outputFilename = "SyntaxOut.txt";
+        String tokenOutFilename = "tokenOut.txt";
+        String SyntaxOutFilename = "SyntaxOut.txt";
 
         switch (args.length) {
             case 2:
-                outputFilename = args[1];
+                SyntaxOutFilename = args[1];
             case 1:
-                sourceFilename = args[0];
+                tokenOutFilename = args[0];
             case 0:
                 break;
             default:
@@ -43,9 +43,9 @@ public class Parser {
                 return;
         }
 
-        sourceList = readFile(sourceFilename);
+        sourceList = readFile(tokenOutFilename);
 
         // 输出结果
-        output(outputFilename);
+        output(SyntaxOutFilename);
     }
 }
