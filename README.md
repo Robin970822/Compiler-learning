@@ -10,7 +10,7 @@
 java Lexer inputFilename [outputFilename] [errorFilename]
 ```
 
-##Parser
+## Parser
 
 语法分析器
 

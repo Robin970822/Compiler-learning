@@ -1,15 +1,18 @@
 package lexer;
 
-import java.io.*;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
 import util.State;
 import util.Token;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
+
 import static util.FileReader.readFile;
 
-public class Lexer{
+public class Lexer {
     private static Token currentToken;
     private static State state = State.ST;
 
@@ -389,7 +392,7 @@ public class Lexer{
         // 扫描开始行号
         int line = 1;
         // 开始扫描
-        for (String s: sourceList) {
+        for (String s : sourceList) {
             scan(s, line);
             line++;
         }
