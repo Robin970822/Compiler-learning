@@ -19,8 +19,9 @@ public class State {
     static final int DO = 6;
     static final int AG = 7;
     static final int MI = 8;
-    static final int TW = 9;
-    static final int DONE = 10;
+    static final int ET = 9;
+    static final int TW = 10;
+    static final int DONE = 11;
 
     //当前字符属性
     static final int PLUS = 1;
@@ -37,9 +38,9 @@ public class State {
     static final int DOUBLECOLON = 11;
     static final int WORD = 12;
     static final int NUM = 13;
-    static final int PLUSEQUALBIG = 14;
-    static final int MINUSBIG = 15;
-    static final int EQUALBIG = 16;
+    static final int PLUSEQUALTO = 14;
+    static final int MINUSTO = 15;
+    static final int EQUALTO = 16;
 
     //关键字
     static final int THREAD = 17;

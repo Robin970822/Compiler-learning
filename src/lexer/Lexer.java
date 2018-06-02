@@ -53,7 +53,7 @@ public class Lexer extends State {
                                 break;
                             case '=':
                                 currentToken = EQUAL;
-                                state = MI;
+                                state = ET;
                                 break;
                             case ':':
                                 currentToken = COLON;
@@ -126,7 +126,7 @@ public class Lexer extends State {
                 case EQ:
                     if (c == '>') {
                         state = DONE;
-                        currentToken = PLUSEQUALBIG;
+                        currentToken = PLUSEQUALTO;
                     } else {
                         state = ST;
                         faultList.add(lineNum + " : " + source.substring(0, source.length() - 1) + "%" + endCol + "%" + "unrecognized word '" + c + "'" + ", only approve +=>.");
@@ -169,10 +169,20 @@ public class Lexer extends State {
                         currentToken = NUM;
                     } else if (c == '>') {
                         state = DONE;
-                        currentToken = MINUSBIG;
+                        currentToken = MINUSTO;
                     } else {
                         state = ST;
-                        faultList.add(lineNum + " : " + source.substring(0, source.length() - 1) + "%" + endCol + "%" + "unrecognized word '" + c + "'" + ", only approve ->, => or -num.");
+                        faultList.add(lineNum + " : " + source.substring(0, source.length() - 1) + "%" + endCol + "%" + "unrecognized word '" + c + "'" + ", only approve -> or -num.");
+                        tokenList.add("<" + source.substring(beginCol, endCol) + "," + ERROR + ">");
+                    }
+                    break;
+                case ET:
+                    if (c == '>') {
+                        state = DONE;
+                        currentToken = EQUALTO;
+                    } else {
+                        state = ST;
+                        faultList.add(lineNum + " : " + source.substring(0, source.length() - 1) + "%" + endCol + "%" + "unrecognized word '" + c + "'" + ", only approve =>");
                         tokenList.add("<" + source.substring(beginCol, endCol) + "," + ERROR + ">");
                     }
                     break;
