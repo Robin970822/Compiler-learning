@@ -1,4 +1,4 @@
-package common;
+package util;
 
 /**
  *  状态常量

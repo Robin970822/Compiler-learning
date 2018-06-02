@@ -4,10 +4,10 @@ import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
-import common.State;
-import common.Token;
+import util.State;
+import util.Token;
 
-import static common.FileReader.readFile;
+import static util.FileReader.readFile;
 
 public class Lexer{
     private static Token currentToken;

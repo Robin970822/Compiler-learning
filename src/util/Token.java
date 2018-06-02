@@ -1,4 +1,4 @@
-package common;
+package util;
 
 /**
  *  字符类型
