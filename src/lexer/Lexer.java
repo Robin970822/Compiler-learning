@@ -4,10 +4,12 @@ import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import common.State;
+import common.TokenType;
 
-public class Lexer extends State {
-    private static int currentToken = 0;
-    private static int state = ST;
+public class Lexer{
+    private static TokenType currentToken;
+    private static State state = State.ST;
 
     private static List<String> faultList = new ArrayList<>(); // 错误表
     private static StringBuilder result = new StringBuilder(); // 扫描之后的结果
@@ -36,163 +38,163 @@ public class Lexer extends State {
                 case ST:
                     beginCol = endCol;
                     if (isIdentifierLetter(c)) {
-                        state = IL;
-                        currentToken = WORD;
+                        state = State.IL;
+                        currentToken = TokenType.IDENTIFIER;
                     } else if (isDigit(c)) {
-                        state = FY;
-                        currentToken = NUM;
+                        state = State.FY;
+                        currentToken = TokenType.DECIMAL;
                     } else {
                         switch (c) {
                             case '+':
-                                currentToken = PLUS;
-                                state = PL;
+                                currentToken = TokenType.PLUS;
+                                state = State.PL;
                                 break;
                             case '-':
-                                currentToken = MINUS;
-                                state = MI;
+                                currentToken = TokenType.MINUS;
+                                state = State.MI;
                                 break;
                             case '=':
-                                currentToken = EQUAL;
-                                state = ET;
+                                currentToken = TokenType.EQUAL;
+                                state = State.ET;
                                 break;
                             case ':':
-                                currentToken = COLON;
-                                state = TW;
+                                currentToken = TokenType.COLON;
+                                state = State.TW;
                                 break;
                             case '{':
-                                currentToken = LBRACE;
-                                state = DONE;
+                                currentToken = TokenType.LBRACE;
+                                state = State.DONE;
                                 break;
                             case '}':
-                                currentToken = RBRACE;
-                                state = DONE;
+                                currentToken = TokenType.RBRACE;
+                                state = State.DONE;
                                 break;
                             case ';':
-                                currentToken = SEMI;
-                                state = DONE;
+                                currentToken = TokenType.SEMI;
+                                state = State.DONE;
                                 break;
                             case ' ':
-                                currentToken = SPACE;
-                                state = ST;
+                                currentToken = TokenType.SPACE;
+                                state = State.ST;
                                 break;
                             case '\t':
-                                currentToken = TABLE;
-                                state = ST;
+                                currentToken = TokenType.TABLE;
+                                state = State.ST;
                                 break;
                             case '\n':
-                                currentToken = ENTER;
-                                state = ST;
+                                currentToken = TokenType.ENTER;
+                                state = State.ST;
                                 break;
                             default:
-                                state = ST;
+                                state = State.ST;
                                 faultList.add(lineNum + ":" + source.substring(0, source.length() - 1) + "%" + endCol + "%" + "unrecognized word '" + c + "'");
-                                tokenList.add("<" + c + "," + ERROR + ">");
+                                tokenList.add("<" + c + "," + TokenType.ERROR + ">");
                         } // End switch c
                     }
                     break;
                 case IL:
                     if (isIdentifierLetter(c) || isDigit(c)) {
-                        state = IL;
-                        currentToken = WORD;
+                        state = State.IL;
+                        currentToken = TokenType.IDENTIFIER;
                     } else if (c == '_') {
-                        state = UN;
-                        currentToken = WORD;
-                    } else state = DONE;
+                        state = State.UN;
+                        currentToken = TokenType.IDENTIFIER;
+                    } else state = State.DONE;
                     break;
                 case UN:
                     if (isIdentifierLetter(c) || isDigit(c)) {
-                        state = IL;
-                        currentToken = WORD;
+                        state = State.IL;
+                        currentToken = TokenType.IDENTIFIER;
                     } else {
-                        state = ST;
+                        state = State.ST;
                         faultList.add(lineNum + " : " + source.substring(0, source.length() - 1) + "%" + endCol + "%" + "unrecognized word '" + c + "'" + ", there should be letter or digit.");
-                        tokenList.add("<" + source.substring(beginCol, endCol) + "," + ERROR + ">");
+                        tokenList.add("<" + source.substring(beginCol, endCol) + "," + TokenType.ERROR + ">");
                     }
                     break;
                 case PL:
                     if (c == '=') {
-                        state = EQ;
-                        currentToken = PLUS;
+                        state = State.EQ;
+                        currentToken = TokenType.PLUS;
                     } else if (isDigit(c)) {
-                        state = FY;
-                        currentToken = NUM;
+                        state = State.FY;
+                        currentToken = TokenType.DECIMAL;
                     } else {
-                        state = ST;
+                        state = State.ST;
                         pointer--;
                         faultList.add(lineNum + " : " + source.substring(0, source.length() - 1) + "%" + endCol + "%" + "unrecognized word '" + source.charAt(endCol - 1) + "'" + ", only approve +=> or +num.");
-                        tokenList.add("<" + source.substring(beginCol, endCol) + "," + ERROR + ">");
+                        tokenList.add("<" + source.substring(beginCol, endCol) + "," + TokenType.ERROR + ">");
                     }
                     break;
                 case EQ:
                     if (c == '>') {
-                        state = DONE;
-                        currentToken = PLUSEQUALTO;
+                        state = State.DONE;
+                        currentToken = TokenType.PLUSEQUALTO;
                     } else {
-                        state = ST;
+                        state = State.ST;
                         faultList.add(lineNum + " : " + source.substring(0, source.length() - 1) + "%" + endCol + "%" + "unrecognized word '" + c + "'" + ", only approve +=>.");
-                        tokenList.add("<" + source.substring(beginCol, endCol) + "," + ERROR + ">");
+                        tokenList.add("<" + source.substring(beginCol, endCol) + "," + TokenType.ERROR + ">");
                     }
                     break;
                 case FY:
                     if (isDigit(c)) {
-                        state = FY;
-                        currentToken = NUM;
+                        state = State.FY;
+                        currentToken = TokenType.DECIMAL;
                     } else if (c == '.') {
-                        state = DO;
-                        currentToken = NUM;
+                        state = State.DO;
+                        currentToken = TokenType.DECIMAL;
                     } else {
-                        state = ST;
+                        state = State.ST;
                         pointer--;
                         faultList.add(lineNum + " : " + source.substring(0, source.length() - 1) + "%" + endCol + "%" + "unrecognized word '" + c + "'" + ", only approve . or digit here.");
-                        tokenList.add("<" + source.substring(beginCol, endCol) + "," + ERROR + ">");
+                        tokenList.add("<" + source.substring(beginCol, endCol) + "," + TokenType.ERROR + ">");
                     }
                     break;
                 case DO:
                     if (isDigit(c)) {
-                        state = AG;
-                        currentToken = NUM;
+                        state = State.AG;
+                        currentToken = TokenType.DECIMAL;
                     } else {
-                        state = ST;
+                        state = State.ST;
                         faultList.add(lineNum + " : " + source.substring(0, source.length() - 1) + "%" + endCol + "%" + "unrecognized word '" + c + "'" + ", only approve digit here.");
-                        tokenList.add("<" + source.substring(beginCol, endCol) + "," + ERROR + ">");
+                        tokenList.add("<" + source.substring(beginCol, endCol) + "," + TokenType.ERROR + ">");
                     }
                     break;
                 case AG:
                     if (isDigit(c)) {
-                        state = AG;
-                        currentToken = NUM;
-                    } else state = DONE;
+                        state = State.AG;
+                        currentToken = TokenType.DECIMAL;
+                    } else state = State.DONE;
                     break;
                 case MI:
                     if (isDigit(c)) {
-                        state = FY;
-                        currentToken = NUM;
+                        state = State.FY;
+                        currentToken = TokenType.DECIMAL;
                     } else if (c == '>') {
-                        state = DONE;
-                        currentToken = MINUSTO;
+                        state = State.DONE;
+                        currentToken = TokenType.MINUSTO;
                     } else {
-                        state = ST;
+                        state = State.ST;
                         faultList.add(lineNum + " : " + source.substring(0, source.length() - 1) + "%" + endCol + "%" + "unrecognized word '" + c + "'" + ", only approve -> or -num.");
-                        tokenList.add("<" + source.substring(beginCol, endCol) + "," + ERROR + ">");
+                        tokenList.add("<" + source.substring(beginCol, endCol) + "," + TokenType.ERROR + ">");
                     }
                     break;
                 case ET:
                     if (c == '>') {
-                        state = DONE;
-                        currentToken = EQUALTO;
+                        state = State.DONE;
+                        currentToken = TokenType.EQUALTO;
                     } else {
-                        state = ST;
+                        state = State.ST;
                         faultList.add(lineNum + " : " + source.substring(0, source.length() - 1) + "%" + endCol + "%" + "unrecognized word '" + c + "'" + ", only approve =>");
-                        tokenList.add("<" + source.substring(beginCol, endCol) + "," + ERROR + ">");
+                        tokenList.add("<" + source.substring(beginCol, endCol) + "," + TokenType.ERROR + ">");
                     }
                     break;
                 case TW:
                     if (c == ':') {
-                        state = DONE;
-                        currentToken = DOUBLECOLON;
+                        state = State.DONE;
+                        currentToken = TokenType.DOUBLECOLON;
                     } else {
-                        state = DONE;
-                        currentToken = COLON;
+                        state = State.DONE;
+                        currentToken = TokenType.COLON;
                     }
                     break;
                 case DONE:
@@ -201,27 +203,27 @@ public class Lexer extends State {
                     break;
             } // End switch state
 
-            if (state == DONE) {
+            if (state == State.DONE) {
                 // 实数或者标识符
-                if (currentToken == NUM || currentToken == WORD) {
+                if (currentToken == TokenType.DECIMAL || currentToken == TokenType.IDENTIFIER) {
                     String tmp = source.substring(beginCol, endCol);
                     // 判断是否为关键字
-                    tokenList.add("<" + tmp + "," + (getKeyword(tmp) == -1 ? currentToken : getKeyword(tmp)) + ">");
-                    if (getKeyword(tmp) == -1 && currentToken == WORD) {
+                    tokenList.add("<" + tmp + "," + (getKeyword(tmp) == TokenType.NULL ? currentToken : getKeyword(tmp)) + ">");
+                    if (getKeyword(tmp) == TokenType.NULL && currentToken == TokenType.IDENTIFIER) {
                         if (!symbolList.contains(tmp)) {
                             symbolList.add(tmp);
                         }
                     }
                     result.append(" ").append(tmp);
-                    currentToken = -1;
-                } else if (currentToken == COLON) { // 是否为 ":"
-                    tokenList.add("<" + ":" + "," + COLON + ">");
+                    currentToken = TokenType.NULL;
+                } else if (currentToken == TokenType.COLON) { // 是否为 ":"
+                    tokenList.add("<" + ":" + "," + TokenType.COLON + ">");
                     result.append(":");
-                    currentToken = -1;
-                } else if (currentToken == DOUBLECOLON) { // 是否为 "::"
-                    tokenList.add("<" + "::" + "," + DOUBLECOLON + ">");
+                    currentToken = TokenType.NULL;
+                } else if (currentToken == TokenType.DOUBLECOLON) { // 是否为 "::"
+                    tokenList.add("<" + "::" + "," + TokenType.DOUBLECOLON + ">");
                     result.append("::");
-                    currentToken = -1;
+                    currentToken = TokenType.NULL;
                     pointer++;
                 } else {
                     if (!Objects.equals(source.substring(beginCol, endCol), "\n")) { // 其他情况
@@ -230,10 +232,10 @@ public class Lexer extends State {
                         result.append(" ").append(source.substring(beginCol, endCol + 1));
                     }
                     pointer++; //指针前移
-                    currentToken = -1;
+                    currentToken = TokenType.NULL;
                 }
                 pointer--; // 指针后移
-                state = ST;
+                state = State.ST;
             } // state == DONE end
         }
 
@@ -245,62 +247,62 @@ public class Lexer extends State {
      * @param identifier 输入字符串
      * @return 关键字的状态常量
      */
-    private static int getKeyword(String identifier) {
-        int keyword = -1;
+    private static TokenType getKeyword(String identifier) {
+        TokenType keyword = TokenType.NULL;
         switch (identifier) {
             case "thread":
-                keyword = THREAD;
+                keyword = TokenType.THREAD;
                 break;
             case "features":
-                keyword = FEATURES;
+                keyword = TokenType.FEATURES;
                 break;
             case "flows":
-                keyword = FLOWS;
+                keyword = TokenType.FLOWS;
                 break;
             case "properties":
-                keyword = PROPERTIES;
+                keyword = TokenType.PROPERTIES;
                 break;
             case "end":
-                keyword = END;
+                keyword = TokenType.END;
                 break;
             case "none":
-                keyword = NONE;
+                keyword = TokenType.NONE;
                 break;
             case "in":
-                keyword = IN;
+                keyword = TokenType.IN;
                 break;
             case "out":
-                keyword = OUT;
+                keyword = TokenType.OUT;
                 break;
             case "data":
-                keyword = DATA;
+                keyword = TokenType.DATA;
                 break;
             case "port":
-                keyword = PORT;
+                keyword = TokenType.PORT;
                 break;
             case "event":
-                keyword = EVENT;
+                keyword = TokenType.EVENT;
                 break;
             case "parameter":
-                keyword = PARAMETER;
+                keyword = TokenType.PARAMETER;
                 break;
             case "flow":
-                keyword = FLOW;
+                keyword = TokenType.FLOW;
                 break;
             case "source":
-                keyword = SOURCE;
+                keyword = TokenType.SOURCE;
                 break;
             case "sink":
-                keyword = SINK;
+                keyword = TokenType.SINK;
                 break;
             case "path":
-                keyword = PATH;
+                keyword = TokenType.PATH;
                 break;
             case "constant":
-                keyword = CONSTANT;
+                keyword = TokenType.CONSTANT;
                 break;
             case "access":
-                keyword = ACCESS;
+                keyword = TokenType.ACCESS;
                 break;
         }
         return keyword;
