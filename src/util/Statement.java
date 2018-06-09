@@ -9,7 +9,7 @@ public enum Statement {
     FEATURE_SPEC,
     PORT_SPEC,
     PORT_TYPE,
-    PARAMETE_SPEC,
+    PARAMETER,
     IO_TYPE,
     FLOW_SPEC,
     FLOW_SOURCE_SPEC,
