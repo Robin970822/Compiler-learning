@@ -1,5 +1,9 @@
 package util;
 
+/**
+ * 语句常量
+ * 用于语法分析
+ */
 public enum Statement {
     THREAD_SPEC,
     FEATURE_SPEC,
