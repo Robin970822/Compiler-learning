@@ -17,7 +17,7 @@ java Lexer inputFilename [outputFilename] [errorFilename]
 使用方法
 
 ```shell
-java Parser tokenOutFilename [syntaxOutFilename]
+java Parser tokenOutFilename [syntaxOutFilename] [errorFilename]
 ```
 
 
