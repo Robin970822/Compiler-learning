@@ -319,6 +319,7 @@ public class Parser {
             t.identifierList.add(currentVal);
         }
         match(Token.IDENTIFIER);
+        match(Token.SEMI);
     }
 
     /**
@@ -523,10 +524,10 @@ public class Parser {
         if (t.child[0] != null) {
             reverseTree(t.child[0], level, builder);
         }
-        if (t.child[0] != null && t.child[1] != null) {
+        if (t.child[1] != null) {
             reverseTree(t.child[1], level, builder);
         }
-        if (t.child[0] != null && t.child[1] != null && t.child[2] != null) {
+        if (t.child[2] != null) {
             reverseTree(t.child[2], level, builder);
         }
         if (t.nodeList != null) {
@@ -560,6 +561,7 @@ public class Parser {
         while (pointer < sourceList.size()) {
             currentToken = nextToken();
             treeNodeList.add(ThreadSpec());
+            pointer --;
         }
 
         result.append("TREE \n");
