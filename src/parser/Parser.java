@@ -63,8 +63,8 @@ public class Parser {
         match(Token.THREAD);
         if (currentToken == Token.IDENTIFIER) {
             t.identifierList.add(currentVal);
-            match(Token.IDENTIFIER);
         }
+        match(Token.IDENTIFIER);
         if (currentToken == Token.FEATURES) {
             match(Token.FEATURES);
             t.child[0] = featureSpec();
@@ -81,8 +81,8 @@ public class Parser {
         match(Token.END);
         if (currentToken == Token.IDENTIFIER) {
             t.identifierList.add(currentVal);
-            match(Token.IDENTIFIER);
         }
+        match(Token.IDENTIFIER);
         match(Token.SEMI);
         return t;
     }
@@ -107,8 +107,8 @@ public class Parser {
         } else {
             if (currentToken == Token.IDENTIFIER) {
                 t.identifierList.add(currentVal);
-                match(Token.IDENTIFIER);
             }
+            match(Token.IDENTIFIER);
             match(Token.COLON);
             t.child[0] = IOtype();
             if (currentToken == Token.PARAMETER) {
@@ -157,6 +157,7 @@ public class Parser {
             if (currentToken == Token.IDENTIFIER) {
                 t.child[0] = reference();
             }
+            t.setOp(Token.DATAPORT);
         } else if (currentToken == Token.EVENT) {
             match(Token.EVENT);
             if (currentToken == Token.DATA) {
@@ -165,8 +166,10 @@ public class Parser {
                 if (currentToken == Token.IDENTIFIER) {
                     t.child[0] = reference();
                 }
+                t.setOp(Token.EVENTDATAPORT);
             } else {
                 match(Token.PORT);
+                t.setOp(Token.EVENTPORT);
             }
         }
         return t;
@@ -558,7 +561,7 @@ public class Parser {
 
         sourceList = readFile(tokenOutFilename);
         List<TreeNode> treeNodeList = new ArrayList<>();
-        while (pointer < sourceList.size()) {
+        while (pointer < sourceList.size() - 1 ) {
             currentToken = nextToken();
             treeNodeList.add(ThreadSpec());
             pointer --;

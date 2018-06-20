@@ -35,8 +35,6 @@ public enum Token {
     PROPERTIES,
     END,
     NONE,
-    IN,
-    OUT,
     DATA,
     PORT,
     EVENT,
@@ -47,5 +45,14 @@ public enum Token {
     PATH,
     CONSTANT,
     ACCESS,
-    INOUT
+
+    // IOtype
+    IN,
+    OUT,
+    INOUT,
+
+    // portType
+    DATAPORT,
+    EVENTDATAPORT,
+    EVENTPORT
 }
