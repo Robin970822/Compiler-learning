@@ -287,7 +287,7 @@ public class Parser {
      */
     private static void flowSinkSpec(TreeNode t) {
         t.statement = Statement.FLOW_SINK_SPEC;
-        match(Token.SOURCE);
+        match(Token.SINK);
         if (currentToken == Token.IDENTIFIER) {
             t.identifierList.add(currentVal);
         }
