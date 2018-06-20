@@ -92,7 +92,7 @@ public class Parser {
      * <p>
      * 等价转换为
      * <p>
-     * featureSpec --> identifier : IOtype (port | parameter) | none;
+     * featureSpec --> identifier : IOtype (port | Parameter) | none;
      *
      * @return featureSpec 语法树
      */
@@ -264,6 +264,20 @@ public class Parser {
      * @param t flowSpec 父节点
      */
     private static void flowSourceSpec(TreeNode t) {
+        t.statement = Statement.FLOW_SOURCE_SPEC;
+        match(Token.SOURCE);
+        if (currentToken == Token.IDENTIFIER) {
+            t.identifierList.add(currentVal);
+        }
+        match(Token.IDENTIFIER);
+        if (currentToken == Token.LBRACE) {
+            match(Token.LBRACE);
+            while (currentToken == Token.IDENTIFIER) {
+                t.nodeList.add(association());
+            }
+            match(Token.RBRACE);
+        }
+        match(Token.SEMI);
     }
 
     /**
@@ -272,6 +286,20 @@ public class Parser {
      * @param t flowSpec 父节点
      */
     private static void flowSinkSpec(TreeNode t) {
+        t.statement = Statement.FLOW_SINK_SPEC;
+        match(Token.SOURCE);
+        if (currentToken == Token.IDENTIFIER) {
+            t.identifierList.add(currentVal);
+        }
+        match(Token.IDENTIFIER);
+        if (currentToken == Token.LBRACE) {
+            match(Token.LBRACE);
+            while (currentToken == Token.IDENTIFIER) {
+                t.nodeList.add(association());
+            }
+            match(Token.RBRACE);
+        }
+        match(Token.SEMI);
     }
 
     /**
@@ -280,17 +308,144 @@ public class Parser {
      * @param t flowSpec 父节点
      */
     private static void flowPathSpec(TreeNode t) {
+        t.statement = Statement.FLOW_PATH_SPEC;
+        match(Token.PATH);
+        if (currentToken == Token.IDENTIFIER) {
+            t.identifierList.add(currentVal);
+        }
+        match(Token.IDENTIFIER);
+        match(Token.MINUSTO);
+        if (currentToken == Token.IDENTIFIER) {
+            t.identifierList.add(currentVal);
+        }
+        match(Token.IDENTIFIER);
     }
 
-    private static TreeNode reference() {
-        return null;
-    }
-
-
+    /**
+     * association -->[ identifier :: ] identifier splitter [ constant ] access decimal | none
+     *
+     * @return association 语法树
+     */
     private static TreeNode association() {
-        return null;
+        TreeNode t = new TreeNode(Statement.ASSOCIATION);
+        if (currentToken == Token.NONE) {
+            match(Token.NONE);
+            t.isNone = true;
+            t.setOp(Token.NONE);
+            return t;
+        }else {
+            if (currentToken == Token.IDENTIFIER) {
+                t.identifierList.add(currentVal);
+            }
+            match(Token.IDENTIFIER);
+            if (currentToken == Token.DOUBLECOLON) {
+                match(Token.DOUBLECOLON);
+                if (currentToken == Token.IDENTIFIER) {
+                    t.identifierList.add(currentVal);
+                }
+                match(Token.IDENTIFIER);
+            }
+            t.child[0] = splitter();
+            if (currentToken == Token.CONSTANT) {
+                match(Token.CONSTANT);
+            }
+            match(Token.ACCESS);
+            if (currentToken == Token.DECIMAL) {
+                t.setDecimal(Double.parseDouble(currentVal));
+            }
+            match(Token.DECIMAL);
+        }
+        return t;
     }
 
+    /**
+     * splitter-->  => | +=>
+     *
+     * @return splitter 语法树
+     */
+    private static TreeNode splitter() {
+        TreeNode t = new TreeNode(Statement.SPLITTER);
+        if (currentToken == Token.EQUALTO) {
+            t.setOp(currentToken);
+            match(Token.EQUALTO);
+        } else if (currentToken == Token.PLUSEQUALTO) {
+            t.setOp(currentToken);
+            match(Token.PLUSEQUALTO);
+        }
+        return t;
+    }
+
+    /**
+     * reference -->[ packageName :: ]  identifier
+     * packageName --> { identifier :: }  identifier
+     *
+     * packageName --> { identifier :: }  identifier 可等价转换为
+     * packageName --> identifier { :: identifier }
+     *
+     * @return reference 语法树
+     */
+    private static TreeNode reference() {
+        // 例如 Compiler::parser::Parser
+        // 例如 Parser
+        TreeNode t = new TreeNode(Statement.REFERENCE);
+        if (currentToken == Token.IDENTIFIER){
+            // Compiler::parser::Parser
+            //         ^^
+            // 应该判断::
+
+            // Parser
+            //        ^^
+            // 应该用t.identifierList记录标识符并返回
+            match(Token.IDENTIFIER);
+        } if (currentToken == Token.DOUBLECOLON) {
+            // 有 packageName ::
+            // Compiler::parser::Parser
+            //         ^^
+            while (true) { // 循环
+                if (currentToken == Token.DOUBLECOLON) {
+                    // 如果还有::，那么还在packageName中，用t.idList记录其中的标识符
+                    // 回到标识符的位置
+                    // Compiler::parser::Parser
+                    //   ^^
+                    pointer --;
+                    if (currentToken == Token.IDENTIFIER) {
+                        t.idList.add(currentVal);
+                    }
+                    match(Token.IDENTIFIER);
+                    // 前进到下一个::可能出现的位置
+                    // Compiler::parser::Parser
+                    //                 ^^
+                    pointer += 2;
+                } else {
+                    // 如果没有::，那么已不再packageName中，用t.identifierList记录最后一个的标识符
+                    // Compiler::parser::Parser
+                    //                         ^^
+
+                    // Compiler::parser::Parser
+                    //                     ^^
+                    pointer --;
+                    if (currentToken == Token.IDENTIFIER) {
+                        t.identifierList.add(currentVal);
+                    }
+                    match(Token.IDENTIFIER);
+                    return t;
+                }
+            }
+        } else {
+            // 没有 packageName ::
+            // Parser
+            //        ^^
+
+            // Parser
+            //  ^^
+            pointer --;
+            if (currentToken == Token.IDENTIFIER){
+                t.identifierList.add(currentVal);
+            }
+            match(Token.IDENTIFIER);
+        }
+        return t;
+    }
 
     /**
      * 输出结果

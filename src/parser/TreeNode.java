@@ -15,9 +15,11 @@ public class TreeNode {
     boolean isNone = false;
 
     List<String> identifierList = new ArrayList<>();
+    List<String> idList = new ArrayList<>();
     List<TreeNode> nodeList = new ArrayList<>();
 
     private Token op;
+    private double decimal = 0;
 
     public TreeNode(Statement statement) {
         this.statement = statement;
@@ -29,5 +31,13 @@ public class TreeNode {
 
     public void setOp(Token op) {
         this.op = op;
+    }
+
+    public void setDecimal(double decimal) {
+        this.decimal = decimal;
+    }
+
+    public double getDecimal() {
+        return decimal;
     }
 }
