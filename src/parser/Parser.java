@@ -337,7 +337,7 @@ public class Parser {
             t.isNone = true;
             t.setOp(Token.NONE);
             return t;
-        }else {
+        } else {
             if (currentToken == Token.IDENTIFIER) {
                 t.identifierList.add(currentVal);
             }
@@ -352,6 +352,7 @@ public class Parser {
             t.child[0] = splitter();
             if (currentToken == Token.CONSTANT) {
                 match(Token.CONSTANT);
+                t.setOp(Token.CONSTANT);
             }
             match(Token.ACCESS);
             if (currentToken == Token.DECIMAL) {
@@ -382,7 +383,7 @@ public class Parser {
     /**
      * reference -->[ packageName :: ]  identifier
      * packageName --> { identifier :: }  identifier
-     *
+     * <p>
      * packageName --> { identifier :: }  identifier 可等价转换为
      * packageName --> identifier { :: identifier }
      *
@@ -392,7 +393,7 @@ public class Parser {
         // 例如 Compiler::parser::Parser
         // 例如 Parser
         TreeNode t = new TreeNode(Statement.REFERENCE);
-        if (currentToken == Token.IDENTIFIER){
+        if (currentToken == Token.IDENTIFIER) {
             // Compiler::parser::Parser
             //         ^^
             // 应该判断::
@@ -401,7 +402,8 @@ public class Parser {
             //        ^^
             // 应该用t.identifierList记录标识符并返回
             match(Token.IDENTIFIER);
-        } if (currentToken == Token.DOUBLECOLON) {
+        }
+        if (currentToken == Token.DOUBLECOLON) {
             // 有 packageName ::
             // Compiler::parser::Parser
             //         ^^
@@ -411,7 +413,7 @@ public class Parser {
                     // 回到标识符的位置
                     // Compiler::parser::Parser
                     //   ^^
-                    pointer -=2;
+                    pointer -= 2;
                     currentToken = nextToken();
                     if (currentToken == Token.IDENTIFIER) {
                         t.idList.add(currentVal);
@@ -420,7 +422,7 @@ public class Parser {
                     // 前进到下一个::可能出现的位置
                     // Compiler::parser::Parser
                     //                 ^^
-                    pointer ++;
+                    pointer++;
                     currentToken = nextToken();
                 } else {
                     // 如果没有::，那么已不再packageName中，用t.identifierList记录最后一个的标识符
@@ -445,8 +447,8 @@ public class Parser {
 
             // Parser
             //  ^^
-            pointer --;
-            if (currentToken == Token.IDENTIFIER){
+            pointer--;
+            if (currentToken == Token.IDENTIFIER) {
                 t.identifierList.add(currentVal);
             }
             match(Token.IDENTIFIER);
@@ -486,13 +488,13 @@ public class Parser {
     }
 
     /**
-     * 遍历语法树，获得语法分析结果
+     * （先序）遍历语法树，获得语法分析结果
      *
-     * @param t 语法树
-     * @param level 语法树等级
+     * @param t       语法树
+     * @param level   语法树等级
      * @param builder 保存的结果
      */
-    private static void reverseTree(TreeNode t, int level, StringBuilder builder) {
+    private static void preTree(TreeNode t, int level, StringBuilder builder) {
         for (int i = 0; i < level; i++) {
             builder.append("  ");
         }
@@ -501,7 +503,7 @@ public class Parser {
         builder.append("(");
         if (t.identifierList != null) {
             builder.append(" ");
-            for (String identifier: t.identifierList) {
+            for (String identifier : t.identifierList) {
                 builder.append(identifier);
                 builder.append(" ");
             }
@@ -523,19 +525,19 @@ public class Parser {
             builder.append(" ");
         }
         builder.append(")\n");
-        level ++;
+        level++;
         if (t.child[0] != null) {
-            reverseTree(t.child[0], level, builder);
+            preTree(t.child[0], level, builder);
         }
         if (t.child[1] != null) {
-            reverseTree(t.child[1], level, builder);
+            preTree(t.child[1], level, builder);
         }
         if (t.child[2] != null) {
-            reverseTree(t.child[2], level, builder);
+            preTree(t.child[2], level, builder);
         }
         if (t.nodeList != null) {
             for (TreeNode child : t.nodeList) {
-                reverseTree(child, level, builder);
+                preTree(child, level, builder);
             }
         }
     }
@@ -561,15 +563,15 @@ public class Parser {
 
         sourceList = readFile(tokenOutFilename);
         List<TreeNode> treeNodeList = new ArrayList<>();
-        while (pointer < sourceList.size() - 1 ) {
+        while (pointer < sourceList.size() - 1) {
             currentToken = nextToken();
             treeNodeList.add(ThreadSpec());
-            pointer --;
+            pointer--;
         }
 
         result.append("TREE \n");
         for (TreeNode t : treeNodeList) {
-            reverseTree(t, 0, result);
+            preTree(t, 0, result);
         }
 
         // 输出结果
