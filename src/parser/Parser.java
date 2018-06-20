@@ -48,7 +48,7 @@ public class Parser {
             return true;
         } else {
             System.err.println("Unexpected token: " + currentVal + "We expected a token of \" " + expected + "\" type.");
-            faultList.add("Unexpected token: " + currentVal + "We expected a token of \" " + expected + "\" type.");
+            faultList.add("Unexpected token: " + currentVal + ". We expected a token of \" " + expected + "\" type.");
             return false;
         }
     }
@@ -407,7 +407,8 @@ public class Parser {
                     // 回到标识符的位置
                     // Compiler::parser::Parser
                     //   ^^
-                    pointer --;
+                    pointer -=2;
+                    currentToken = nextToken();
                     if (currentToken == Token.IDENTIFIER) {
                         t.idList.add(currentVal);
                     }
@@ -415,7 +416,8 @@ public class Parser {
                     // 前进到下一个::可能出现的位置
                     // Compiler::parser::Parser
                     //                 ^^
-                    pointer += 2;
+                    pointer ++;
+                    currentToken = nextToken();
                 } else {
                     // 如果没有::，那么已不再packageName中，用t.identifierList记录最后一个的标识符
                     // Compiler::parser::Parser
@@ -423,7 +425,8 @@ public class Parser {
 
                     // Compiler::parser::Parser
                     //                     ^^
-                    pointer --;
+                    pointer -= 2;
+                    currentToken = nextToken();
                     if (currentToken == Token.IDENTIFIER) {
                         t.identifierList.add(currentVal);
                     }
@@ -478,7 +481,59 @@ public class Parser {
         error.close();
     }
 
-    private static void reverseTree(TreeNode t, int i, StringBuilder result) {
+    /**
+     * 遍历语法树，获得语法分析结果
+     *
+     * @param t 语法树
+     * @param level 语法树等级
+     * @param builder 保存的结果
+     */
+    private static void reverseTree(TreeNode t, int level, StringBuilder builder) {
+        for (int i = 0; i < level; i++) {
+            builder.append("  ");
+        }
+        builder.append("--");
+        builder.append(t.statement);
+        builder.append("(");
+        if (t.identifierList != null) {
+            builder.append(" ");
+            for (String identifier: t.identifierList) {
+                builder.append(identifier);
+                builder.append(" ");
+            }
+        }
+        if (t.getDecimal() != 0) {
+            builder.append(t.getDecimal());
+            builder.append(" ");
+        }
+        if (t.idList != null && !t.idList.isEmpty()) {
+            builder.append("list( ");
+            for (String id : t.idList) {
+                builder.append(id);
+                builder.append(" ");
+            }
+            builder.append(")");
+        }
+        if (t.getOp() != null) {
+            builder.append(t.getOp());
+            builder.append(" ");
+        }
+        builder.append(")\n");
+        level ++;
+        if (t.child[0] != null) {
+            reverseTree(t.child[0], level, builder);
+        }
+        if (t.child[0] != null && t.child[1] != null) {
+            reverseTree(t.child[1], level, builder);
+        }
+        if (t.child[0] != null && t.child[1] != null && t.child[2] != null) {
+            reverseTree(t.child[2], level, builder);
+        }
+        if (t.nodeList != null) {
+            for (TreeNode child : t.nodeList) {
+                reverseTree(child, level, builder);
+            }
+        }
     }
 
     public static void main(String[] args) throws IOException {
@@ -509,7 +564,7 @@ public class Parser {
 
         result.append("TREE \n");
         for (TreeNode t : treeNodeList) {
-            reverseTree(t, 1, result);
+            reverseTree(t, 0, result);
         }
 
         // 输出结果
