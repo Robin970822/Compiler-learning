@@ -47,7 +47,7 @@ public class Parser {
             currentToken = nextToken();
             return true;
         } else {
-            String fault = "Unexpected token: " + currentVal + ". We expected a token of \" " + expected + "\" type.";
+            String fault = "Unexpected token at the " + (pointer + 1) + " Token : \"" + currentVal + "\" , We expected a token of \"" + expected + "\" type.";
             System.err.println(fault);
             faultList.add(fault);
             // 如果下一个字符类型能够匹配当前期望字符，那么跳过当前字符继续匹配
@@ -457,7 +457,8 @@ public class Parser {
 
             // Parser
             //  ^^
-            pointer--;
+            pointer -= 2;
+            currentToken = nextToken();
             if (currentToken == Token.IDENTIFIER) {
                 t.identifierList.add(currentVal);
             }
