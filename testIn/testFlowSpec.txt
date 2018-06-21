@@ -1,0 +1,19 @@
+thread flow1
+flows
+    none;
+end flow1;
+
+thread Thread1
+flows
+        flow1: flow source signal;
+end Thread1;
+
+thread Thread2
+flows
+        flow1: flow sink signal;
+end Thread2;
+
+thread Thread3
+flows
+        flow1: flow path signal -> result1;
+end Thread3;

@@ -47,15 +47,16 @@ public class Parser {
             currentToken = nextToken();
             return true;
         } else {
-            System.err.println("Unexpected token: " + currentVal + "We expected a token of \" " + expected + "\" type.");
-            faultList.add("Unexpected token: " + currentVal + ". We expected a token of \" " + expected + "\" type.");
+            String fault = "Unexpected token: " + currentVal + ". We expected a token of \" " + expected + "\" type.";
+            System.err.println(fault);
+            faultList.add(fault);
             // 如果下一个字符类型能够匹配当前期望字符，那么跳过当前字符继续匹配
             currentToken = nextToken();
             if (currentToken == expected) {
                 currentToken = nextToken();
             } else {
                 // 否则依然回退回当前字符
-                pointer -= 2;
+                pointer -= 1;
                 currentToken = nextToken();
             }
             return false;

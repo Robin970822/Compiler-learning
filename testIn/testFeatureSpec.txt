@@ -1,0 +1,20 @@
+thread feature1
+features
+    none;
+end feature1;
+
+thread feature2
+features
+    port1 : in event port;
+end feature2;
+
+thread feature3
+features
+    param1 : in parameter;
+end feature3;
+
+thread feature3
+features
+    param1 : in parameter;
+    none
+end feature3;

@@ -1,0 +1,21 @@
+thread nothing
+end noting;
+
+thread feature1
+features
+    none;
+end feature1;
+
+thread flow1
+flows
+    none;
+end flow1;
+
+thread property1
+properties
+    none;
+end property1;
+
+thread one
+another
+end one;
