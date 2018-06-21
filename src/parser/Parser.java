@@ -518,7 +518,7 @@ public class Parser {
                 builder.append(" ");
             }
         }
-        if (t.getDecimal() != 0) {
+        if (t.getDecimal() < Double.MAX_VALUE) {
             builder.append(t.getDecimal());
             builder.append(" ");
         }

@@ -19,7 +19,7 @@ public class TreeNode {
     List<TreeNode> nodeList = new ArrayList<>();
 
     private Token op;
-    private double decimal = 0;
+    private double decimal = Double.MAX_VALUE;
 
     public TreeNode(Statement statement) {
         this.statement = statement;
