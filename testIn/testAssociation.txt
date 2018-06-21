@@ -1,0 +1,19 @@
+thread Thread1
+properties
+	none;
+end Thread1;
+
+thread Thread2
+properties
+	dispatch_protocol => access 50.0;
+end Thread2;
+
+thread Thread3
+properties
+	dispatch_protocol +=> constant access 50.0;
+end Thread3;
+
+thread Thread4
+properties
+	result1::result2 +=> constant access 50.0;
+end Thread4;

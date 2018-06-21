@@ -1,0 +1,14 @@
+thread Thread1
+features
+	Input : in data port Position_GPS;
+end Thread1;
+
+thread Thread2
+features
+	Input : in data port Nav::Position_GPS;
+end Thread2;
+
+thread Thread3
+features
+	Input : in data port Nav1::Nav2::Position_GPS;
+end Thread3;
