@@ -11,27 +11,27 @@ Markdown is a lightweight and easy-to-use syntax for styling your writing. It in
 ```markdown
 Syntax highlighted code block
 
-# Header 1
-## Header 2
-### Header 3
+# Compiler-learning
 
-- Bulleted
-- List
+## Lexer
 
-1. Numbered
-2. List
+词法分析程序
 
-**Bold** and _Italic_ and `Code` text
+使用方法
 
-[Link](url) and ![Image](src)
+```shell
+java Lexer inputFilename [outputFilename] [errorFilename]
 ```
 
-For more details see [GitHub Flavored Markdown](https://guides.github.com/features/mastering-markdown/).
+## Parser
 
-### Jekyll Themes
+语法分析器
 
-Your Pages site will use the layout and styles from the Jekyll theme you have selected in your [repository settings](https://github.com/Robin970822/Compiler-learning/settings). The name of this theme is saved in the Jekyll `_config.yml` configuration file.
+使用方法
 
-### Support or Contact
+```shell
+java Parser tokenOutFilename [syntaxOutFilename] [errorFilename]
+```
 
-Having trouble with Pages? Check out our [documentation](https://docs.github.com/categories/github-pages-basics/) or [contact support](https://github.com/contact) and we’ll help you sort it out.
+
+
